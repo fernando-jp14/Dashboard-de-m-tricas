@@ -1,27 +1,21 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Dashboard de Rendimiento Web</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
-
 <body>
-    <div class="container">
+    <div class="container {% if json_data %}form-arriba{% endif %}">
         <h1>Dashboard de Rendimiento Web</h1>
 
         {% if error %}
-        <div class="alert alert-error">
-            {{ error }}
-        </div>
+        <div class="alert alert-error">{{ error }}</div>
         {% endif %}
-
         {% if success %}
-        <div class="alert alert-success">
-            {{ success }}
-        </div>
+        <div class="alert alert-success">{{ success }}</div>
         {% endif %}
 
         <form method="post" enctype="multipart/form-data" id="uploadForm">
@@ -30,6 +24,7 @@
             <button type="submit">Cargar JSON</button>
         </form>
 
+        {% if json_data %}
         <div class="charts">
             <div class="chart-container">
                 <h3>Tiempo de Carga</h3>
@@ -45,32 +40,29 @@
             </div>
         </div>
 
-        {% if json_data %}
-        <div class="summary">
-            <h2>Resumen de Métricas</h2>
-            <ul>
-                <li><strong>URL:</strong> {{ metrics.0.url }}</li>
-                <li><strong>Tiempo de Carga:</strong> {{ metrics.0.tiempo_carga }} ms</li>
-                <li><strong>Uso de Memoria:</strong> {{ metrics.0.uso_memoria }} MB</li>
-                <li><strong>Solicitudes HTML:</strong> {{ metrics.0.solicitudes_html }}</li>
-                <li><strong>Solicitudes CSS:</strong> {{ metrics.0.solicitudes_css }}</li>
-                <li><strong>Solicitudes JavaScript:</strong> {{ metrics.0.solicitudes_js }}</li>
-                <li><strong>Solicitudes Imágenes:</strong> {{ metrics.0.solicitudes_imagenes }}</li>
-                <li><strong>Solicitudes Fuentes:</strong> {{ metrics.0.solicitudes_fuentes }}</li>
-                <li><strong>Solicitudes Otros:</strong> {{ metrics.0.solicitudes_otros }}</li>
-                <li><strong>Total de Solicitudes:</strong> {{ metrics.0.total_solicitudes }}</li>
-            </ul>
-        </div>
-        {% endif %}
+        <hr>
 
+        <h2 class="sub">Resumen de Métricas</h2>
+        <div class="resumen">
+            <div class="card"><strong>URL:</strong> <span>{{ metrics.0.url }}</span></div>
+            <div class="card"><strong>Tiempo de Carga:</strong> <span>{{ metrics.0.tiempo_carga }}</span></div>
+            <div class="card"><strong>Uso de Memoria:</strong> <span>{{ metrics.0.uso_memoria }}</span></div>
+            <div class="card"><strong>Solicitudes HTML:</strong> <span>{{ metrics.0.solicitudes_html }}</span></div>
+            <div class="card"><strong>Solicitudes CSS:</strong> <span>{{ metrics.0.solicitudes_css }}</span></div>
+            <div class="card"><strong>Solicitudes JS:</strong> <span>{{ metrics.0.solicitudes_js }}</span></div>
+            <div class="card"><strong>Solicitudes Imágenes:</strong> <span>{{ metrics.0.solicitudes_imagenes }}</span></div>
+            <div class="card"><strong>Solicitudes Fuentes:</strong> <span>{{ metrics.0.solicitudes_fuentes }}</span></div>
+            <div class="card"><strong>Solicitudes Otros:</strong> <span>{{ metrics.0.solicitudes_otros }}</span></div>
+        </div>
+        <div class="card center-card"><strong>Total de Solicitudes:</strong> <span>{{ metrics.0.total_solicitudes }}</span></div>
+        {% endif %}
     </div>
+
     {% if json_data %}
     <script id="chart-data" type="application/json">
         {{ json_data|safe }}
     </script>
     {% endif %}
-
     <script src="{% static 'script.js' %}"></script>
 </body>
-
 </html>
