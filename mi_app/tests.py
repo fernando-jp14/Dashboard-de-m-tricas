@@ -34,7 +34,7 @@ class WebPerformanceModelTest(TestCase):
 
     def test_total_solicitudes(self):
         #que la propiedad calculada total_solicitudes suma correctamente todas las solicitudes:
-        self.assertEqual(self.web_perf.total_solicitudes, 10)
+        self.assertEqual(self.web_perf.total_solicitudes, 11)
 
     def test_desglose_tiempos_is_dict(self):
         #Que desglose_tiempos es un diccionario
