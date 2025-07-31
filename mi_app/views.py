@@ -7,7 +7,7 @@ def upload_json(request):
         if not request.FILES.get('json_file'):
             # ⚡ Agregamos mensaje de error si no se subió archivo
             return render(request, 'index.html', {
-                'error': 'Por favor selecciona un archivo JSON',
+                'error': 'Por favor, selecciona un archivo JSON',
                 'metrics': WebPerformance.objects.all().order_by('-fecha')[:10]
             })
 

@@ -1,12 +1,20 @@
+from django.test import TestCase
+
+# Create your tests here.
+
 from django.test import TestCase, Client
 from .models import WebPerformance
+from django.utils import timezone
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 import json
+#test model
+
 
 
 # -------------------- TEST DEL MODELO --------------------
 #Antes de cada prueba, crea un registro de prueba en la base de datos temporal que usa Django para testing.
+#main
 class WebPerformanceModelTest(TestCase):
 
     def setUp(self):
@@ -48,12 +56,13 @@ class WebPerformanceModelTest(TestCase):
         self.assertGreater(self.web_perf.uso_memoria, 0)
 
 
-# -------------------- TEST DE LA VISTA --------------------
+
+#test views.py
 class UploadJsonViewTest(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.url = reverse('upload_json')
+        self.url = reverse('upload_json') 
 
         self.valid_data = {
             "url": "https://ejemplo.com",
@@ -73,19 +82,19 @@ class UploadJsonViewTest(TestCase):
             }
         }
 
+
+    # uni
     def test_get_request_returns_template(self):
-        """Debe devolver el template index.html en GET"""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'index.html')
 
     def test_post_valid_json_creates_metric(self):
-        """Debe crear un registro si el JSON es válido"""
         json_bytes = json.dumps(self.valid_data).encode('utf-8')
         json_file = SimpleUploadedFile("metric.json", json_bytes, content_type="application/json")
 
         response = self.client.post(self.url, {'json_file': json_file}, follow=True)
-
+        
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Archivo JSON procesado correctamente")
         self.assertEqual(WebPerformance.objects.count(), 1)
@@ -97,12 +106,15 @@ class UploadJsonViewTest(TestCase):
 
     def test_post_empty_file_shows_error(self): #va 
         """Si no se envía archivo, debe mostrar error"""
+        #main
         response = self.client.post(self.url, {}, follow=True)
-        self.assertContains(response, "Por favor selecciona un archivo JSON")
+        self.assertContains(response, "Por favor, selecciona un archivo JSON")
         self.assertEqual(WebPerformance.objects.count(), 0)
+
 
     def test_post_invalid_json_shows_error(self): #va
         """Si el JSON es inválido, debe mostrar error"""
+        #main
         invalid_file = SimpleUploadedFile("invalid.json", b"{no valido}", content_type="application/json")
 
         response = self.client.post(self.url, {'json_file': invalid_file}, follow=True)
