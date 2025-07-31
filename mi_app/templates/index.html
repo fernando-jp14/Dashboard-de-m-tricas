@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard de Rendimiento Web</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dashboard de Rendimiento Web</h1>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            <input type="file" name="json_file" id="jsonFile" accept=".json" required>
+            <button type="submit">Cargar JSON</button>
+        </form>
+
+        <div class="charts">
+            <div class="chart-container">
+                <h3>Tiempo de Carga</h3>
+                <canvas id="loadTimeChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Solicitudes HTTP</h3>
+                <canvas id="requestsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Desglose de Tiempos</h3>
+                <canvas id="timingBreakdownChart"></canvas>
+            </div>
+        </div>
+
+        {% if json_data %}
+        <div class="summary">
+            <h2>Resumen de Métricas</h2>
+            <ul>
+                <li><strong>URL:</strong> {{ metrics.0.url }}</li>
+                <li><strong>Tiempo de Carga:</strong> {{ metrics.0.tiempo_carga }} ms</li>
+                <li><strong>Uso de Memoria:</strong> {{ metrics.0.uso_memoria }} MB</li>
+                <li><strong>Solicitudes HTML:</strong> {{ metrics.0.solicitudes_html }}</li>
+                <li><strong>Solicitudes CSS:</strong> {{ metrics.0.solicitudes_css }}</li>
+                <li><strong>Solicitudes JavaScript:</strong> {{ metrics.0.solicitudes_js }}</li>
+                <li><strong>Solicitudes Imágenes:</strong> {{ metrics.0.solicitudes_imagenes }}</li>
+                <li><strong>Solicitudes Fuentes:</strong> {{ metrics.0.solicitudes_fuentes }}</li>
+                <li><strong>Solicitudes Otros:</strong> {{ metrics.0.solicitudes_otros }}</li>
+                <li><strong>Total de Solicitudes:</strong> {{ metrics.0.total_solicitudes }}</li>
+            </ul>
+        </div>
+        {% endif %}
+
+    </div>
+    {% if json_data %}
+    <script id="chart-data" type="application/json">
+        {{ json_data|safe }}
+    </script>
+    {% endif %}
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+
+</html>
