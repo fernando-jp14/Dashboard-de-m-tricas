@@ -14,7 +14,7 @@ import json
 
 # -------------------- TEST DEL MODELO --------------------
 #Antes de cada prueba, crea un registro de prueba en la base de datos temporal que usa Django para testing.
-main
+#main
 class WebPerformanceModelTest(TestCase):
 
     def setUp(self):
@@ -106,7 +106,7 @@ class UploadJsonViewTest(TestCase):
 
     def test_post_empty_file_shows_error(self): #va 
         """Si no se envía archivo, debe mostrar error"""
-        main
+        #main
         response = self.client.post(self.url, {}, follow=True)
         self.assertContains(response, " Por favor, selecciona un archivo JSON.")
         self.assertEqual(WebPerformance.objects.count(), 0)
@@ -114,7 +114,7 @@ class UploadJsonViewTest(TestCase):
 
     def test_post_invalid_json_shows_error(self): #va
         """Si el JSON es inválido, debe mostrar error"""
-        main
+        #main
         invalid_file = SimpleUploadedFile("invalid.json", b"{no valido}", content_type="application/json")
 
         response = self.client.post(self.url, {'json_file': invalid_file}, follow=True)
