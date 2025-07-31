@@ -1,0 +1,22 @@
+# Entorno virtual
+env/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+
+# Archivos de base de datos
+*.sqlite3
+
+# Archivos de configuración del editor
+.vscode/
+.idea/
+
+# Archivos estáticos generados (si aplica)
+staticfiles/
+
+# Archivos de logs
+*.log
+
+# Archivos migrados
+migrations/
