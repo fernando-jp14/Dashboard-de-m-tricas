@@ -2,6 +2,20 @@ from django.shortcuts import render
 from .models import WebPerformance
 import json
 
+def create_metric(data):
+    req = data.get('requestTypes', {})
+    return WebPerformance.objects.create(
+        url=data.get('url', ''),
+                tiempo_carga=data.get('loadTime', 0),
+                desglose_tiempos=data.get('timingBreakdown', {}),
+                uso_memoria=data.get('memoryUsage', 0),
+                solicitudes_html=data.get('requestTypes', {}).get('HTML', 0),
+                solicitudes_css=data.get('requestTypes', {}).get('CSS', 0),
+                solicitudes_js=data.get('requestTypes', {}).get('JavaScript', 0),
+                solicitudes_imagenes=data.get('requestTypes', {}).get('Imagenes', 0),
+                solicitudes_fuentes=data.get('requestTypes', {}).get('Fuentes', 0),
+                solicitudes_otros=data.get('requestTypes', {}).get('Otros', 0)
+    )
 def upload_json(request):
     if request.method == 'POST':
         if not request.FILES.get('json_file'):
@@ -16,19 +30,7 @@ def upload_json(request):
             data = json.loads(json_file.read().decode('utf-8'))
             #--------------
 
-            metric = WebPerformance(
-                url=data.get('url', ''),
-                tiempo_carga=data.get('loadTime', 0),
-                desglose_tiempos=data.get('timingBreakdown', {}),
-                uso_memoria=data.get('memoryUsage', 0),
-                solicitudes_html=data.get('requestTypes', {}).get('HTML', 0),
-                solicitudes_css=data.get('requestTypes', {}).get('CSS', 0),
-                solicitudes_js=data.get('requestTypes', {}).get('JavaScript', 0),
-                solicitudes_imagenes=data.get('requestTypes', {}).get('Imagenes', 0),
-                solicitudes_fuentes=data.get('requestTypes', {}).get('Fuentes', 0),
-                solicitudes_otros=data.get('requestTypes', {}).get('Otros', 0)
-            )
-            metric.save()
+            metric = create_metric(data)
             #----------------------------------------------------------
 
             json_data = json.dumps({
