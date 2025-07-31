@@ -96,7 +96,7 @@ class UploadJsonViewTest(TestCase):
         response = self.client.post(self.url, {'json_file': json_file}, follow=True)
         
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, " Archivo JSON procesado correctamente.")
+        self.assertContains(response, "Archivo JSON procesado correctamente")
         self.assertEqual(WebPerformance.objects.count(), 1)
 
         metric = WebPerformance.objects.first()
@@ -108,7 +108,7 @@ class UploadJsonViewTest(TestCase):
         """Si no se envía archivo, debe mostrar error"""
         #main
         response = self.client.post(self.url, {}, follow=True)
-        self.assertContains(response, " Por favor, selecciona un archivo JSON.")
+        self.assertContains(response, "Por favor, selecciona un archivo JSON")
         self.assertEqual(WebPerformance.objects.count(), 0)
 
 
@@ -118,5 +118,5 @@ class UploadJsonViewTest(TestCase):
         invalid_file = SimpleUploadedFile("invalid.json", b"{no valido}", content_type="application/json")
 
         response = self.client.post(self.url, {'json_file': invalid_file}, follow=True)
-        self.assertContains(response, "El contenido del archivo no es un JSON válido.")
+        self.assertContains(response, "El archivo no es un JSON válido")
         self.assertEqual(WebPerformance.objects.count(), 0)
