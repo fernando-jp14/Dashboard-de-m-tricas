@@ -6,6 +6,7 @@ import json
 
 
 # -------------------- TEST DEL MODELO --------------------
+#Antes de cada prueba, crea un registro de prueba en la base de datos temporal que usa Django para testing.
 class WebPerformanceModelTest(TestCase):
 
     def setUp(self):
@@ -25,19 +26,23 @@ class WebPerformanceModelTest(TestCase):
             solicitudes_otros=0
         )
 
-    def test_str_representation(self):
+    def test_str_representation(self): 
+        #Que el método __str__ del modelo devuelve la cadena correcta.
         fecha_formateada = self.web_perf.fecha.strftime('%Y-%m-%d')
         esperado = f"https://ejemplo.com - 1234.56ms - {fecha_formateada}"
         self.assertEqual(str(self.web_perf), esperado)
 
     def test_total_solicitudes(self):
+        #que la propiedad calculada total_solicitudes suma correctamente todas las solicitudes:
         self.assertEqual(self.web_perf.total_solicitudes, 11)
 
     def test_desglose_tiempos_is_dict(self):
+        #Que desglose_tiempos es un diccionario
         self.assertIsInstance(self.web_perf.desglose_tiempos, dict)
         self.assertIn("DOM Load", self.web_perf.desglose_tiempos)
 
     def test_creacion_exitosa(self):
+        #ue el modelo se guardó correctamente y los valores son coherentes.
         self.assertIsInstance(self.web_perf, WebPerformance)
         self.assertEqual(self.web_perf.url, "https://ejemplo.com")
         self.assertGreater(self.web_perf.uso_memoria, 0)
@@ -90,13 +95,13 @@ class UploadJsonViewTest(TestCase):
         self.assertEqual(metric.tiempo_carga, self.valid_data['loadTime'])
         self.assertEqual(metric.uso_memoria, self.valid_data['memoryUsage'])
 
-    def test_post_empty_file_shows_error(self):
+    def test_post_empty_file_shows_error(self): #va 
         """Si no se envía archivo, debe mostrar error"""
         response = self.client.post(self.url, {}, follow=True)
         self.assertContains(response, "Por favor selecciona un archivo JSON")
         self.assertEqual(WebPerformance.objects.count(), 0)
 
-    def test_post_invalid_json_shows_error(self):
+    def test_post_invalid_json_shows_error(self): #va
         """Si el JSON es inválido, debe mostrar error"""
         invalid_file = SimpleUploadedFile("invalid.json", b"{no valido}", content_type="application/json")
 

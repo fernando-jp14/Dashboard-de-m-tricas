@@ -14,6 +14,7 @@ def upload_json(request):
         json_file = request.FILES['json_file']
         try:
             data = json.loads(json_file.read().decode('utf-8'))
+            #--------------
 
             metric = WebPerformance(
                 url=data.get('url', ''),
@@ -28,6 +29,7 @@ def upload_json(request):
                 solicitudes_otros=data.get('requestTypes', {}).get('Otros', 0)
             )
             metric.save()
+            #----------------------------------------------------------
 
             json_data = json.dumps({
                 'url': metric.url,
